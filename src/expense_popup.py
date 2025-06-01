@@ -29,9 +29,9 @@ class InputExpensePopup(QWidget):
         layout.addWidget(self.descLabel)
         layout.addWidget(self.descEdit)
 
-        self.amountLabel = SubtitleLabel("Jumlah", self)
+        self.amountLabel = SubtitleLabel("Perkiraan harga", self)
         self.amountEdit = LineEdit(self)
-        self.amountEdit.setPlaceholderText("Masukkan jumlah pemasukan")
+        self.amountEdit.setPlaceholderText("Masukkan perkiraan harga")
         layout.addWidget(self.amountLabel)
         layout.addWidget(self.amountEdit)
 

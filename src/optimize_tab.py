@@ -25,6 +25,8 @@ class OptimizeTab(QFrame):
         title.setStyleSheet("font-size: 24px; font-weight: bold; color: black;")
         self.subtitle = SubtitleLabel("Total Uang: ", self)
         self.subtitle.setStyleSheet("font-size: 16px; color: black;")
+        self.remaining_budget_label = SubtitleLabel("Sisa Uang: ", self)
+        self.remaining_budget_label.setStyleSheet("font-size: 16px; color: black;")
 
         topRowWidget = QWidget(self)
         topRowLayout = QHBoxLayout(topRowWidget)
@@ -40,6 +42,7 @@ class OptimizeTab(QFrame):
 
         self.hBoxLayout.addWidget(title, 0, Qt.AlignTop)
         self.hBoxLayout.addWidget(topRowWidget, 0, Qt.AlignTop)
+        self.hBoxLayout.addWidget(self.remaining_budget_label, 0, Qt.AlignTop)
 
         self.table = TableWidget(self)
         self.table.setBorderVisible(True)
@@ -59,6 +62,7 @@ class OptimizeTab(QFrame):
         self.table.setSelectionBehavior(TableWidget.SelectRows)
         self.table.setSelectionMode(TableWidget.SingleSelection)
         self.table.setEditTriggers(TableWidget.NoEditTriggers)
+        self.table.currentItemChanged.connect(self.loadExpenseData)
 
         buttonRowWidget = QWidget(self)
         buttonRowLayout = QHBoxLayout(buttonRowWidget)
@@ -111,13 +115,12 @@ class OptimizeTab(QFrame):
                 self.table.setItem(i, j, item)
 
         self.table.setHorizontalHeaderLabels(
-            ["Description", "Amount", "Priority", "Benefit-Cost Ratio"]
+            ["Description", "Estimated Amount", "Priority", "Benefit-Cost Ratio"]
         )
         self.table.resizeColumnsToContents()
 
-        self.subtitle.setText(
-            f"Total Uang: Rp {total_income:,.2f} | Sisa: Rp {temp_budget:,.2f}"
-        )
+        self.subtitle.setText(f"Total Uang: Rp {total_income:,.2f}")
+        self.remaining_budget_label.setText(f"Sisa Budget: Rp {temp_budget:,.2f}")
 
     def deleteExpenseData(self):
         selected_row = self.table.currentRow()
