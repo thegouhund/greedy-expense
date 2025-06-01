@@ -13,5 +13,6 @@
 
 3. **Run the main script:**
     ```bash
+    cd src
     python main.py
     ```
