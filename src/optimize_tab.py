@@ -1,4 +1,5 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QTableWidgetItem
 from qfluentwidgets import (
     SubtitleLabel,
@@ -90,10 +91,10 @@ class OptimizeTab(QFrame):
             incomeInfos = json.load(f)
 
         total_income = sum(float(item["amount"]) for item in incomeInfos)
-        self.expenseInfos.sort(key=lambda x: float(x.get("bcr", 0)), reverse=True)
+        self.expenseInfos.sort(key=lambda x: int(x.get("priority", 0)), reverse=True)
 
         self.table.setRowCount(len(self.expenseInfos))
-        self.table.setColumnCount(4)
+        self.table.setColumnCount(3)
 
         temp_budget = total_income
         for i, expenseInfo in enumerate(self.expenseInfos):
@@ -101,21 +102,20 @@ class OptimizeTab(QFrame):
             amount_val = expenseInfo.get("amount", "")
             amount = format_rupiah(amount_val)
             priority = str(expenseInfo.get("priority", ""))
-            bcr = str(expenseInfo.get("bcr", ""))
-            row = [desc, amount, priority, bcr]
+            row = [desc, amount, priority]
 
             can_be_paid = temp_budget >= float(amount_val)
             if can_be_paid:
                 temp_budget -= float(amount_val)
 
-            for j in range(4):
+            for j in range(3):
                 item = QTableWidgetItem(row[j])
                 if can_be_paid:
-                    item.setBackground(Qt.green)
+                    item.setBackground(QColor("#C8E6C9"))  # Light green for can be paid
                 self.table.setItem(i, j, item)
 
         self.table.setHorizontalHeaderLabels(
-            ["Description", "Estimated Amount", "Priority", "Benefit-Cost Ratio"]
+            ["Description", "Estimated Amount", "Priority"]
         )
         self.table.resizeColumnsToContents()
 
